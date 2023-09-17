@@ -3,8 +3,10 @@ package com.example.spring6reactive.services;
 import com.example.spring6reactive.domain.Beer;
 import com.example.spring6reactive.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -18,7 +20,8 @@ public class BeerService {
     }
 
     public Mono<Beer> getById(Integer beerId) {
-        return this.beerRepository.findById(beerId);
+        return this.beerRepository.findById(beerId)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatusCode.valueOf(404))));
     }
 
     public Mono<Beer> createBeer(Beer beer) {

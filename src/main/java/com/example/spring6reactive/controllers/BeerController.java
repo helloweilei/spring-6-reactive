@@ -45,11 +45,11 @@ public class BeerController {
     @PutMapping("/beers/{beerId}")
     public ResponseEntity<Void> updateBeer(@PathVariable("beerId") Integer beerId, @RequestBody Beer beer) {
         this.beerService.updateBeer(beerId, beer).subscribe();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/beers/{beerId}")
     public Mono<ResponseEntity<Void>> deleteBeerById(@PathVariable Integer beerId) {
-        return this.beerService.deleteById(beerId).map((beer) -> ResponseEntity.noContent().build());
+        return this.beerService.deleteById(beerId).thenReturn(ResponseEntity.noContent().build());
     }
 }
